@@ -16,7 +16,7 @@ const setDevicePowerState = {
    *
    * @returns {Promise<{state: *, status: string}|{msg: string, error: *}>}
    */
-  async setDevicePowerState(deviceId, state, channel = 1) {
+  async setDevicePowerState(deviceId, state, channel = 0) {
     const device = await this.getDevice(deviceId);
     const deviceApiKey = _get(device, 'apikey', false);
     const error = _get(device, 'error', false);
@@ -27,7 +27,7 @@ const setDevicePowerState = {
 
     const switchesAmount = getDeviceChannelCount(uiid);
 
-    if (switchesAmount > 0 && switchesAmount < channel) {
+    if (switchesAmount > 0 && switchesAmount <= channel) {
       throw { error, msg: 'Device channel does not exist' };
     }
 
@@ -42,7 +42,7 @@ const setDevicePowerState = {
     const params = {};
 
     if (switches) {
-      status = switches[channel - 1].switch;
+      status = switches[channel].switch;
     }
 
     if (state === 'toggle') {
@@ -51,7 +51,7 @@ const setDevicePowerState = {
 
     if (switches) {
       params.switches = switches;
-      params.switches[channel - 1].switch = stateToSwitch;
+      params.switches[channel].switch = stateToSwitch;
     } else {
       params.switch = stateToSwitch;
     }
