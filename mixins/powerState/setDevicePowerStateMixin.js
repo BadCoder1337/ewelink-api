@@ -47,11 +47,13 @@ const setDevicePowerState = {
           : switches[channel].switch === 'on' ? 'off' : 'on'
         params.switches = switches;
       } else {
-        params.switches = switches.map(s => s.switch =
-          state !== 'toggle'
-            ? state
-            : s.switch === 'on' ? 'off' : 'on'
-        );
+        params.switches = switches.map(s => {
+          s.switch =
+            state !== 'toggle'
+              ? state
+              : s.switch === 'on' ? 'off' : 'on';
+          return s;
+        });
       }
     } else {
       params.switch = state !== 'toggle'
