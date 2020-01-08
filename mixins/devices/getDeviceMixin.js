@@ -18,7 +18,7 @@ const getDeviceMixin = {
     const error = _get(devices, 'error', false);
 
     if (error === 406) {
-      return { error: 401, msg: 'Authentication error' };
+      throw { error: 401, msg: 'Authentication error' };
     }
 
     if (error || !devices) {
@@ -28,7 +28,7 @@ const getDeviceMixin = {
     const device = devices.find(dev => dev.deviceid === deviceId);
 
     if (!device) {
-      return { error: 500, msg: 'Device does not exist' };
+      throw { error: 500, msg: 'Device does not exist' };
     }
 
     return device;

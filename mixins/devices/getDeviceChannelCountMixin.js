@@ -20,10 +20,10 @@ const getDeviceChannelCountMixin = {
       if (error === 401) {
         return device;
       }
-      return { error, msg: 'Device does not exist' };
+      throw { error, msg: 'Device does not exist' };
     }
 
-    return { status: 'ok', switchesAmount };
+    return { switchesAmount };
   },
 };
 

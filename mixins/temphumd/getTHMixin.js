@@ -18,7 +18,7 @@ const getTHMixin = {
     }
 
     if (!temperature || !humidity) {
-      return { error: 500, msg: "Can't read sensor data from device" };
+      throw { error: 500, msg: "Can't read sensor data from device" };
     }
 
     const data = { status: 'ok', temperature, humidity };

@@ -36,11 +36,10 @@ const checkDeviceUpdateMixin = {
     const isUpdate = _get(update, 'upgradeInfoList.0.version', false);
 
     if (!isUpdate) {
-      return { status: 'ok', msg: 'No update available' };
+      return { msg: 'No update available' };
     }
 
     return {
-      status: 'ok',
       msg: 'Update available',
       version: isUpdate,
     };

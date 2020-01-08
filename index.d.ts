@@ -4,12 +4,34 @@
 declare module 'ewelink-api' {
   export default eWelink;
 
+    type ConstructorArg =
+      { email: string; password: string; region?: string }
+      | { devicesCache: Device[]; }
+      | { arpTable: Array<{ ip: string; mac: string }> }
+      | { at: string }
+
     class eWelink {
-    constructor({ }: { email: string; password: string; } | { at: string; } | { at: string; apiKey: string; });
+    constructor({ }: ConstructorArg);
     /**
     * Login into eWeLink API and get auth credentials.
     */
     login(): Promise<LoginInfo>
+    /**
+     * Generate eWeLink API URL
+     */
+    getApiUrl(): string;
+    /**
+     * Generate eWeLink OTA API URL
+     */
+    getOtaUrl(): string;
+    /**
+     * Generate eWeLink WebSocket URL
+     */
+    getApiWebSocket(): string;
+    /**
+     * Generate Zeroconf URL
+     */
+    getZeroconfUrl(device: Device): string;
     /**
     * Opens a socket connection to eWeLink and listen for real-time events.
     */
@@ -146,40 +168,25 @@ declare module 'ewelink-api' {
   }
 
   export interface DeviceState {
-    status?: string;
     state?: string;
-    error?: number;
-    msg?: string;
   }
 
   export interface SwitchCount {
-    status?: string;
     switchesAmount?: number;
-    error?: number;
-    msg?: string;
   }
 
   export interface TemperatureHumidity {
-    status?: string;
     temperature?: number;
     humidity?: number;
-    error?: number;
-    msg?: string;
   }
 
   export interface PowerUsage {
-    status?: string;
     monthly?: number;
     daily?: Daily[];
-    error?: number;
-    msg?: string;
   }
 
   export interface FirmwareVersion {
-    status?: string;
     fwVersion?: string;
-    error?: number;
-    msg?: string;
   }
 
   export interface LoginInfo {

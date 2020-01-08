@@ -53,9 +53,9 @@ class Zeroconf {
       const arpTable = await Zeroconf.getArpTable(ip);
       const jsonContent = JSON.stringify(arpTable, null, 2);
       fs.writeFileSync(fileName, jsonContent, 'utf8');
-      return { status: 'ok', file: fileName };
+      return { file: fileName };
     } catch (e) {
-      return { error: e.toString() };
+      throw { error: e.toString() };
     }
   }
 
@@ -69,7 +69,7 @@ class Zeroconf {
       const jsonContent = await fs.readFileSync(fileName);
       return JSON.parse(jsonContent);
     } catch (e) {
-      return { error: e.toString() };
+      throw { error: e.toString() };
     }
   }
 
@@ -83,7 +83,7 @@ class Zeroconf {
       const jsonContent = await fs.readFileSync(fileName);
       return JSON.parse(jsonContent);
     } catch (e) {
-      return { error: e.toString() };
+      throw { error: e.toString() };
     }
   }
 }

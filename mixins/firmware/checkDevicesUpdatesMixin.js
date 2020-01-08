@@ -29,7 +29,7 @@ const checkDevicesUpdatesMixin = {
     const upgradeInfoList = _get(updates, 'upgradeInfoList', false);
 
     if (!upgradeInfoList) {
-      return { error: "Can't find firmware update information" };
+      throw { error: "Can't find firmware update information" };
     }
 
     return upgradeInfoList.map(device => {
@@ -37,14 +37,12 @@ const checkDevicesUpdatesMixin = {
 
       if (!upd) {
         return {
-          status: 'ok',
           deviceId: device.deviceid,
           msg: 'No update available',
         };
       }
 
       return {
-        status: 'ok',
         deviceId: device.deviceid,
         msg: 'Update available',
         version: upd,

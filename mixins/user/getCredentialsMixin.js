@@ -28,7 +28,7 @@ const getCredentialsMixin = {
     const region = _get(response, 'region', false);
 
     if (error && [400, 401, 404].indexOf(parseInt(error)) !== -1) {
-      return { error, msg: 'Authentication error' };
+      throw { error, msg: 'Authentication error' };
     }
 
     if (error && parseInt(error) === 301 && region) {
@@ -37,7 +37,7 @@ const getCredentialsMixin = {
         response = await this.getCredentials();
         return response;
       }
-      return { error, msg: 'Region does not exist' };
+      throw { error, msg: 'Region does not exist' };
     }
 
     this.apiKey = _get(response, 'user.apikey', '');
