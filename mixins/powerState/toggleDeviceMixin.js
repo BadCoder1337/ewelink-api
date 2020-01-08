@@ -7,7 +7,7 @@ const toggleDeviceMixin = {
    *
    * @returns {Promise<{state: *, status: string}|{msg: string, error: *}>}
    */
-  async toggleDevice(deviceId, channel = 1) {
+  async toggleDevice(deviceId, channel) {
     return this.setDevicePowerState(deviceId, 'toggle', channel);
   },
 };

@@ -13,7 +13,7 @@ class eWeLink {
     arpTable,
   }) {
     if (!devicesCache && !arpTable && !at && (!email && !password)) {
-      return { error: 'No credentials provided' };
+      throw { error: 'No credentials provided' };
     }
 
     this.region = region;
@@ -96,7 +96,7 @@ class eWeLink {
 
     const error = _get(response, 'error', false);
     if (error && [401, 402].indexOf(parseInt(error)) !== -1) {
-      return { error, msg: 'Authentication error' };
+      throw { error, msg: 'Authentication error' };
     }
 
     return response;
