@@ -11,7 +11,7 @@ const getDevicePowerStateMixin = {
    *
    * @returns {Promise<{state: *, status: string}|{msg: string, error: *}>}
    */
-  async getDevicePowerState(deviceId, channel = 0) {
+  async getDevicePowerState(deviceId, channel) {
     const device = await this.getDevice(deviceId);
     const error = _get(device, 'error', false);
     const uiid = _get(device, 'extra.extra.uiid', false);
@@ -21,7 +21,7 @@ const getDevicePowerStateMixin = {
 
     const switchesAmount = getDeviceChannelCount(uiid);
 
-    if (switchesAmount > 0 && switchesAmount <= channel) {
+    if (typeof channel === 'number' && switchesAmount > 0 && switchesAmount <= channel) {
       throw { error, msg: 'Device channel does not exist' };
     }
 
@@ -32,11 +32,7 @@ const getDevicePowerStateMixin = {
       throw { error, msg: 'Device does not exist' };
     }
 
-    if (switches) {
-      state = switches[channel].switch;
-    }
-
-    return { state };
+    return (switches && typeof channel === 'number') ? switches[channel] : (switches || state);
   },
 };
 

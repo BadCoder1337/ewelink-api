@@ -16,7 +16,7 @@ const setDevicePowerState = {
    *
    * @returns {Promise<{state: *, status: string}|{msg: string, error: *}>}
    */
-  async setDevicePowerState(deviceId, state, channel = 0) {
+  async setDevicePowerState(deviceId, state, channel) {
     const device = await this.getDevice(deviceId);
     const deviceApiKey = _get(device, 'apikey', false);
     const error = _get(device, 'error', false);
@@ -27,7 +27,7 @@ const setDevicePowerState = {
 
     const switchesAmount = getDeviceChannelCount(uiid);
 
-    if (switchesAmount > 0 && switchesAmount <= channel) {
+    if (typeof channel === 'number' && switchesAmount > 0 && switchesAmount <= channel) {
       throw { error, msg: 'Device channel does not exist' };
     }
 
@@ -38,23 +38,30 @@ const setDevicePowerState = {
       throw { error, msg: 'Device does not exist' };
     }
 
-    let stateToSwitch = state;
     const params = {};
 
     if (switches) {
-      status = switches[channel].switch;
-    }
-
-    if (state === 'toggle') {
-      stateToSwitch = status === 'on' ? 'off' : 'on';
-    }
-
-    if (switches) {
-      params.switches = switches;
-      params.switches[channel].switch = stateToSwitch;
+      if (typeof channel === 'number') {
+        switches[channel].switch = state !== 'toggle'
+          ? state
+          : switches[channel].switch === 'on' ? 'off' : 'on'
+        params.switches = switches;
+      } else {
+        params.switches = switches.map(s => s.switch =
+          state !== 'toggle'
+            ? state
+            : s.switch === 'on' ? 'off' : 'on'
+        );
+      }
     } else {
-      params.switch = stateToSwitch;
+      params.switch = state !== 'toggle'
+          ? state
+          : status === 'on' ? 'off' : 'on'
     }
+
+    let stateToSwitch = typeof channel !== 'number'
+      ? status && [{ switch: params.switch }] || params.switches
+      : status && { switch: params.switch } || params.switches[channel];
 
     if (this.devicesCache) {
       return ChangeStateZeroconf.set({

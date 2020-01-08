@@ -13,10 +13,6 @@ declare module 'ewelink-api' {
     class eWelink {
     constructor({ }: ConstructorArg);
     /**
-    * Login into eWeLink API and get auth credentials.
-    */
-    login(): Promise<LoginInfo>
-    /**
      * Generate eWeLink API URL
      */
     getApiUrl(): string;
@@ -47,15 +43,18 @@ declare module 'ewelink-api' {
     /**
      * Query for specified device power status.
      */
-    getDevicePowerState(deviceId: string, channel?: number): Promise<DeviceState>
+    getDevicePowerState(deviceId: string): Promise<DeviceState[]>
+    getDevicePowerState(deviceId: string, channel: number): Promise<DeviceState>
     /**
      * Change specified device power state.
      */
-    setDevicePowerState(deviceId: string, state?: string, channel?: number): Promise<DeviceState>
+    setDevicePowerState(deviceId: string, state: string): Promise<DeviceState[]>
+    setDevicePowerState(deviceId: string, state: string, channel: number): Promise<DeviceState>
     /**
      * Switch specified device current power state.
      */
-    toggleDevice(deviceId: string, channel?: number): Promise<DeviceState>
+    toggleDevice(deviceId: string): Promise<DeviceState[]>
+    toggleDevice(deviceId: string, channel: number): Promise<DeviceState>
     /**
      * Returns current month power usage on device who supports electricity records, like Sonoff POW.
      */
@@ -168,7 +167,8 @@ declare module 'ewelink-api' {
   }
 
   export interface DeviceState {
-    state?: string;
+    switch?: string;
+    outlet?: number;
   }
 
   export interface SwitchCount {
