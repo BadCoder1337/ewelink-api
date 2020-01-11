@@ -16,7 +16,7 @@ const getDevicePowerStateMixin = {
     const error = _get(device, 'error', false);
     const uiid = _get(device, 'extra.extra.uiid', false);
 
-    const state = _get(device, 'params.switch', false);
+    let state = _get(device, 'params.switch', false);
     const switches = _get(device, 'params.switches', false);
 
     const switchesAmount = getDeviceChannelCount(uiid);
@@ -36,13 +36,11 @@ const getDevicePowerStateMixin = {
       return { error, msg: 'Device does not exist' };
     }
 
-    // TODO
-    // return (switches && typeof channel === 'number') ? switches[channel] : (switches || state);
-    // if (switches) {
-    //   state = switches[channel - 1].switch;
-    // }
-
-    // return { status: 'ok', state };
+    state =
+      switches && typeof channel === 'number'
+        ? switches[channel]
+        : switches || { switch: state };
+    return { status: 'ok', state };
   },
 };
 
