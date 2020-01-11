@@ -2,15 +2,15 @@
 // Definitions by: Alexander Méhes https://github.com/BMXsanko
 
 declare module 'ewelink-api' {
-  export default eWelink;
+  // export default eWelink;
 
-    type ConstructorArg =
-      { email: string; password: string; region?: string }
-      | { devicesCache: Device[]; }
-      | { arpTable: Array<{ ip: string; mac: string }> }
-      | { at: string }
+  type ConstructorArg =
+    { email: string; password: string; region?: string }
+    | { devicesCache: IDevice[]; }
+    | { arpTable: Array<{ ip: string; mac: string }> }
+    | { at: string }
 
-    class eWelink {
+  export class eWeLink {
     constructor({ }: ConstructorArg);
     /**
      * Generate eWeLink API URL
@@ -27,7 +27,7 @@ declare module 'ewelink-api' {
     /**
      * Generate Zeroconf URL
      */
-    getZeroconfUrl(device: Device): string;
+    getZeroconfUrl(device: IDevice): string;
     /**
     * Opens a socket connection to eWeLink and listen for real-time events.
     */
@@ -35,70 +35,97 @@ declare module 'ewelink-api' {
     /**
      * Returns a list of devices associated to logged account.
      */
-    getDevices(): Promise<Device[]>
+    getDevices(): Promise<IDevice[]>
     /**
      * Return information for specified device.
      */
-    getDevice(deviceId: string): Promise<Device>
+    getDevice(deviceId: string): Promise<IDevice>
     /**
      * Query for specified device power status.
      */
-    getDevicePowerState(deviceId: string): Promise<DeviceState[]>
-    getDevicePowerState(deviceId: string, channel: number): Promise<DeviceState>
+    getDevicePowerState(deviceId: string): Promise<IDeviceState[]>
+    getDevicePowerState(deviceId: string, channel: number): Promise<IDeviceState>
     /**
      * Change specified device power state.
      */
-    setDevicePowerState(deviceId: string, state: string): Promise<DeviceState[]>
-    setDevicePowerState(deviceId: string, state: string, channel: number): Promise<DeviceState>
+    setDevicePowerState(deviceId: string, state: string): Promise<IDeviceState[]>
+    setDevicePowerState(deviceId: string, state: string, channel: number): Promise<IDeviceState>
     /**
      * Switch specified device current power state.
      */
-    toggleDevice(deviceId: string): Promise<DeviceState[]>
-    toggleDevice(deviceId: string, channel: number): Promise<DeviceState>
+    toggleDevice(deviceId: string): Promise<IDeviceState[]>
+    toggleDevice(deviceId: string, channel: number): Promise<IDeviceState>
     /**
      * Returns current month power usage on device who supports electricity records, like Sonoff POW.
      */
-    getDevicePowerUsage(deviceId: string): Promise<PowerUsage>
+    getDevicePowerUsage(deviceId: string): Promise<IPowerUsage>
     /**
      * Return current temperature and humidity for specified device.
      */
-    getDeviceCurrentTH(deviceId: string): Promise<TemperatureHumidity>
+    getDeviceCurrentTH(deviceId: string): Promise<ITemperatureHumidity>
     /**
      * Return current temperature for specified device.
      */
-    getDeviceCurrentTemperature(deviceId: string): Promise<TemperatureHumidity>
+    getDeviceCurrentTemperature(deviceId: string): Promise<ITemperatureHumidity>
     /**
      * Return current temperature for specified device.
      */
-    getDeviceCurrentHumidity(deviceId: string): Promise<TemperatureHumidity>
+    getDeviceCurrentHumidity(deviceId: string): Promise<ITemperatureHumidity>
     /**
      * Return total channels for specified device.
      */
-    getDeviceChannelCount(deviceId: string): Promise<SwitchCount>
+    getDeviceChannelCount(deviceId: string): Promise<ISwitchCount>
     /**
      * Return firmware version for specified device.
      */
-    getFirmwareVersion(deviceId: string): Promise<FirmwareVersion>
+    getFirmwareVersion(deviceId: string): Promise<IFirmwareVersion>
+
+    checkDevicesUpdates(): Promise<Array<IDeviceUpdate & { deviceId: string }>>
+    checkDeviceUpdate(deviceId: string): Promise<IDeviceUpdate>
   }
 
-  export interface Device {
+  export class Zeroconf {
+    static getArpTable(ip: string): Promise<IHost[]>
+    static fixMacAddresses(hosts: string[]): IHost[]
+    static saveArpTable(config: {ip: string; file: string }): Promise<{ file: string }>
+    /**
+     * @param {string} fileName ./arp-table.json
+     */
+    static loadArpTable(fileName: string): Promise<IHost[]>
+    /**
+     * @param {string} fileName ./devices-cache.json
+     */
+    static loadCachedDevices(fileName: string): Promise<IDevice[]>
+  }
+
+  export interface IDeviceUpdate {
+    msg: string;
+    version?: string;
+  }
+
+  export interface IHost {
+    ip: string;
+    mac: string;
+  }
+
+  export interface IDevice {
     _id: string;
     name: string;
     type: string;
     deviceid: string;
     apikey: string;
-    extra: Extra2;
+    extra: IExtra2;
     __v: number;
     onlineTime: string;
     ip: string;
     location: string;
     offlineTime: string;
     deviceStatus: string;
-    tags: Tags;
-    settings: Settings;
+    tags: ITags;
+    settings: ISettings;
     devGroups: any[];
     groups: any[];
-    params: Params;
+    params: IParams;
     online: boolean;
     createdAt: string;
     group: string;
@@ -109,14 +136,14 @@ declare module 'ewelink-api' {
     showBrand: boolean;
     brandLogoUrl: string;
     productModel: string;
-    devConfig: DevConfig;
+    devConfig: IDevConfig;
     uiid: number;
   }
 
-  export interface DevConfig {
+  export interface IDevConfig {
   }
 
-  export interface Params {
+  export interface IParams {
     pulseWidth: number;
     pulse: string;
     init: number;
@@ -125,7 +152,7 @@ declare module 'ewelink-api' {
     timers: any[];
     controlType: string;
     partnerApikey: string;
-    bindInfos: BindInfos;
+    bindInfos: IBindInfos;
     rssi: number;
     staMac: string;
     startup: string;
@@ -133,26 +160,26 @@ declare module 'ewelink-api' {
     switch: string;
   }
 
-  export interface BindInfos {
+  export interface IBindInfos {
     gaction: string[];
   }
 
-  export interface Settings {
+  export interface ISettings {
     alarmNotify: number;
     opsHistory: number;
     opsNotify: number;
   }
 
-  export interface Tags {
+  export interface ITags {
     m_4434_sany: string;
   }
 
-  export interface Extra2 {
+  export interface IExtra2 {
     _id: string;
-    extra: Extra;
+    extra: IExtra;
   }
 
-  export interface Extra {
+  export interface IExtra {
     description: string;
     brandId: string;
     apmac: string;
@@ -166,37 +193,37 @@ declare module 'ewelink-api' {
     chipid: string;
   }
 
-  export interface DeviceState {
+  export interface IDeviceState {
     switch?: string;
     outlet?: number;
   }
 
-  export interface SwitchCount {
+  export interface ISwitchCount {
     switchesAmount?: number;
   }
 
-  export interface TemperatureHumidity {
+  export interface ITemperatureHumidity {
     temperature?: number;
     humidity?: number;
   }
 
-  export interface PowerUsage {
+  export interface IPowerUsage {
     monthly?: number;
-    daily?: Daily[];
+    daily?: IDaily[];
   }
 
-  export interface FirmwareVersion {
+  export interface IFirmwareVersion {
     fwVersion?: string;
   }
 
-  export interface LoginInfo {
+  export interface ILoginInfo {
     at: string;
     rt: string;
-    user: User;
+    user: IUser;
     region: string;
   }
 
-  export interface User {
+  export interface IUser {
     _id: string;
     email: string;
     appId: string;
@@ -207,23 +234,23 @@ declare module 'ewelink-api' {
     location: string;
     offlineTime: string;
     userStatus: string;
-    appInfos: AppInfo[];
+    appInfos: IAppInfo[];
     isAccepEmailAd: boolean;
-    bindInfos: LoginBindInfos;
+    bindInfos: ILoginBindInfos;
     createdAt: string;
     apikey: string;
   }
 
-  export interface LoginBindInfos {
+  export interface ILoginBindInfos {
     gaction: string[];
   }
 
-  export interface AppInfo {
+  export interface IAppInfo {
     appVersion: string;
     os: string;
   }
 
-  export interface Daily {
+  export interface IDaily {
     day: number;
     usage: number;
   }

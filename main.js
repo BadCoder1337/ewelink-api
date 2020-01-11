@@ -12,7 +12,7 @@ class eWeLink {
     devicesCache,
     arpTable,
   }) {
-    if (!devicesCache && !arpTable && !at && (!email && !password)) {
+    if (!devicesCache && !arpTable && !at && !email && !password) {
       throw { error: 'No credentials provided' };
     }
 
@@ -169,4 +169,6 @@ Object.assign(
 
 Object.assign(eWeLink.prototype, openWebSocketMixin);
 
-module.exports = eWeLink;
+const Zeroconf = require('./classes/Zeroconf');
+
+module.exports = { eWeLink, Zeroconf };
