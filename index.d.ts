@@ -82,20 +82,28 @@ declare module 'ewelink-api' {
 
     checkDevicesUpdates(): Promise<Array<IDeviceUpdate & { deviceId: string }>>
     checkDeviceUpdate(deviceId: string): Promise<IDeviceUpdate>
+    /**
+     * @param {string} [fileName=./devices-cache.json] to `./devices-cache.json` by default
+     */
+    saveDevicesCache(fileName?: string): Promise<{ status: 'ok', file: string }>
   }
 
   export class Zeroconf {
     static getArpTable(ip: string): Promise<IHost[]>
     static fixMacAddresses(hosts: string[]): IHost[]
-    static saveArpTable(config: {ip: string; file: string }): Promise<{ file: string }>
     /**
-     * @param {string} fileName ./arp-table.json
+     * @param {string} config.ip
+     * @param {string} [config.file=./arp-table.json] to `./arp-table.json` by default
      */
-    static loadArpTable(fileName: string): Promise<IHost[]>
+    static saveArpTable(config?: {ip?: string; file?: string }): Promise<{ status: 'ok', file: string }>
     /**
-     * @param {string} fileName ./devices-cache.json
+     * @param {string} [fileName=./arp-table.json] from `./arp-table.json` by default
      */
-    static loadCachedDevices(fileName: string): Promise<IDevice[]>
+    static loadArpTable(fileName?: string): Promise<IHost[]>
+    /**
+     * @param {string} [fileName=./devices-cache.json] from `./devices-cache.json` by default
+     */
+    static loadCachedDevices(fileName?: string): Promise<IDevice[]>
   }
 
   export interface IDeviceUpdate {
@@ -193,12 +201,14 @@ declare module 'ewelink-api' {
     chipid: string;
   }
 
+  export interface IGangState {
+    switch?: string;
+    outlet?: number;
+  }
+
   export interface IDeviceState {
     status: string
-    state: Array<{
-      switch?: string;
-      outlet?: number;
-    }>
+    state: IGangState | IGangState[]
   }
 
   export interface ISwitchCount {
