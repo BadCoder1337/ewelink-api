@@ -1,4 +1,4 @@
-const ewelink = require('../main');
+const { eWeLink } = require('../main');
 
 const {
   email,
@@ -14,7 +14,7 @@ describe.skip('firmware: get version methods', () => {
   let connection;
 
   beforeAll(() => {
-    connection = new ewelink({ email, password });
+    connection = new eWeLink({ email, password });
   });
 
   test('get firmware version', async () => {
@@ -29,7 +29,7 @@ describe.skip('firmware: get version methods', () => {
   test('get device firmware version should be right message', async () => {
     const credentials = await connection.getCredentials();
     const accessToken = credentials.at;
-    const conn = new ewelink({ at: accessToken });
+    const conn = new eWeLink({ at: accessToken });
     const device = await conn.getDevice(singleChannelDeviceId);
     const currentVersion = device.params.fwVersion;
     const firmware = await conn.getFirmwareVersion(singleChannelDeviceId);
@@ -39,7 +39,7 @@ describe.skip('firmware: get version methods', () => {
   });
 
   test('get invalid device firmware version should fail', async () => {
-    const conn = new ewelink({ email, password });
+    const conn = new eWeLink({ email, password });
     const firmwareVersion = await conn.getFirmwareVersion('invalid deviceid');
     expect(typeof firmwareVersion).toBe('object');
     expect(firmwareVersion.msg).toBe('Device does not exist');
@@ -47,7 +47,7 @@ describe.skip('firmware: get version methods', () => {
   });
 
   test('get device firmware version using invalid credentials should fail', async () => {
-    const conn = new ewelink({ email: 'invalid', password: 'credentials' });
+    const conn = new eWeLink({ email: 'invalid', password: 'credentials' });
     const firmware = await conn.getFirmwareVersion(singleChannelDeviceId);
     expect(typeof firmware).toBe('object');
     expect(firmware.msg).toBe('Authentication error');
@@ -59,7 +59,7 @@ describe.skip('firmware: check updates methods', () => {
   let connection;
 
   beforeAll(() => {
-    connection = new ewelink({ email, password });
+    connection = new eWeLink({ email, password });
   });
 
   test.skip('outdated device firmware should return available version', async () => {
@@ -92,7 +92,7 @@ describe.skip('firmware: check updates methods', () => {
   });
 
   test('get devices update check with invalid credentials should fail', async () => {
-    const conn = new ewelink({ email: 'invalid', password: 'credentials' });
+    const conn = new eWeLink({ email: 'invalid', password: 'credentials' });
     const status = await conn.checkDevicesUpdates();
     expect(typeof status).toBe('object');
     expect(status.msg).toBe('Authentication error');

@@ -1,4 +1,4 @@
-const ewelink = require('../main');
+const { eWeLink } = require('../main');
 
 const { email, password, region } = require('./_setup/credentials.js');
 
@@ -6,7 +6,7 @@ const { regionExpectations } = require('./_setup/expectations');
 
 describe('check user information', () => {
   test('region should be returned', async () => {
-    const connection = new ewelink({ email, password });
+    const connection = new eWeLink({ email, password });
     const response = await connection.getRegion();
     expect(response).toMatchObject(regionExpectations);
     expect(typeof response).toBe('object');
@@ -15,7 +15,7 @@ describe('check user information', () => {
   });
 
   test('invalid credentials should fail', async () => {
-    const connection = new ewelink({
+    const connection = new eWeLink({
       email: 'invalid',
       password: 'credentials',
     });
@@ -26,7 +26,7 @@ describe('check user information', () => {
   });
 
   test('invalid initialization should warn user', async () => {
-    const connection = new ewelink({ at: 'access token' });
+    const connection = new eWeLink({ at: 'access token' });
     const response = await connection.getRegion();
     expect(typeof response).toBe('object');
     expect(response.msg).toBe(

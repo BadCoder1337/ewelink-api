@@ -1,6 +1,6 @@
 const delay = require('delay');
 
-const ewelink = require('../main');
+const { eWeLink } = require('../main');
 
 const {
   email,
@@ -17,7 +17,7 @@ describe('power usage: node script', () => {
   let conn;
 
   beforeAll(async () => {
-    conn = new ewelink({ email, password });
+    conn = new eWeLink({ email, password });
     await conn.getCredentials();
   });
 
@@ -48,7 +48,7 @@ describe('power usage: serverless', () => {
   let apiKey;
 
   beforeAll(async () => {
-    const conn = new ewelink({ email, password });
+    const conn = new eWeLink({ email, password });
     const credentials = await conn.getCredentials();
     accessToken = credentials.at;
     apiKey = credentials.user.apikey;
@@ -56,7 +56,7 @@ describe('power usage: serverless', () => {
 
   test('should return raw power usage', async () => {
     jest.setTimeout(30000);
-    const conn = new ewelink({ at: accessToken, apiKey });
+    const conn = new eWeLink({ at: accessToken, apiKey });
     const powerUsage = await conn.getDeviceRawPowerUsage(deviceIdWithPower);
     expect(typeof powerUsage).toBe('object');
     expect(powerUsage).toMatchObject(rawPowerUsageExpectations);
@@ -66,7 +66,7 @@ describe('power usage: serverless', () => {
   test('should return current month power usage', async () => {
     jest.setTimeout(30000);
     const days = new Date().getDate();
-    const conn = new ewelink({ at: accessToken, apiKey });
+    const conn = new eWeLink({ at: accessToken, apiKey });
     const powerUsage = await conn.getDevicePowerUsage(deviceIdWithPower);
     expect(typeof powerUsage).toBe('object');
     expect(powerUsage).toMatchObject(currentMonthPowerUsageExpectations);

@@ -1,5 +1,4 @@
-const ewelink = require('../main');
-const Zeroconf = require('../classes/Zeroconf');
+const { eWeLink, Zeroconf } = require('../main');
 
 const {
   email,
@@ -15,7 +14,7 @@ describe('zeroconf: save devices to cache file', () => {
   test('can save cached devices file', async () => {
     jest.setTimeout(30000);
     const file = './test/_setup/devices-cache.json';
-    const conn = new ewelink({ region, email, password });
+    const conn = new eWeLink({ region, email, password });
     const result = await conn.saveDevicesCache(file);
     expect(typeof result).toBe('object');
     expect(result.status).toBe('ok');
@@ -25,7 +24,7 @@ describe('zeroconf: save devices to cache file', () => {
   test('error saving cached devices file', async () => {
     jest.setTimeout(30000);
     const file = '/tmp/non-existent-folder/devices-cache.json';
-    const conn = new ewelink({ region, email, password });
+    const conn = new eWeLink({ region, email, password });
     const result = await conn.saveDevicesCache(file);
     expect(typeof result).toBe('object');
     expect(result.error).toContain('ENOENT: no such file or directory');
@@ -33,7 +32,7 @@ describe('zeroconf: save devices to cache file', () => {
 
   test('invalid credentials trying to create cached devices file', async () => {
     const file = '/tmp/non-existent-folder/devices-cache.json';
-    const conn = new ewelink({ email: 'invalid', password: 'credentials' });
+    const conn = new eWeLink({ email: 'invalid', password: 'credentials' });
     const result = await conn.saveDevicesCache(file);
     expect(typeof result).toBe('object');
     expect(result.msg).toBe('Authentication error');
@@ -80,7 +79,7 @@ describe('zeroconf: save arp table to file', () => {
 describe('zeroconf: load devices to cache file', () => {
   test('can load cached devices file', async () => {
     jest.setTimeout(30000);
-    const conn = new ewelink({ region, email, password });
+    const conn = new eWeLink({ region, email, password });
     const devices = await conn.getDevices();
     const devicesCache = await Zeroconf.loadCachedDevices(
       './test/_setup/devices-cache.json'

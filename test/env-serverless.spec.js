@@ -1,6 +1,6 @@
 const delay = require('delay');
 
-const ewelink = require('../main');
+const { eWeLink } = require('../main');
 
 const {
   email,
@@ -24,7 +24,7 @@ describe('env: serverless', () => {
   });
 
   test('get ewelink credentials', async () => {
-    const conn = new ewelink({ email, password });
+    const conn = new eWeLink({ email, password });
     const credentials = await conn.getCredentials();
     accessToken = credentials.at;
     apiKey = credentials.user.apikey;
@@ -33,14 +33,14 @@ describe('env: serverless', () => {
   });
 
   test('get all devices', async () => {
-    const conn = new ewelink({ at: accessToken });
+    const conn = new eWeLink({ at: accessToken });
     const devices = await conn.getDevices();
     expect(Array.isArray(devices)).toBe(true);
     expect(devices[0]).toMatchObject(allDevicesExpectations);
   });
 
   test('get specific device', async () => {
-    const conn = new ewelink({ at: accessToken });
+    const conn = new eWeLink({ at: accessToken });
     const device = await conn.getDevice(singleChannelDeviceId);
     expect(typeof device).toBe('object');
     expect(device.deviceid).toBe(singleChannelDeviceId);
@@ -48,7 +48,7 @@ describe('env: serverless', () => {
   });
 
   test('get device power state', async () => {
-    const conn = new ewelink({ at: accessToken });
+    const conn = new eWeLink({ at: accessToken });
     const device = await conn.getDevice(singleChannelDeviceId);
     const currentState = device.params.switch;
     const powerState = await conn.getDevicePowerState(singleChannelDeviceId);
@@ -59,7 +59,7 @@ describe('env: serverless', () => {
 
   test('set device power state', async () => {
     jest.setTimeout(30000);
-    const conn = new ewelink({ at: accessToken, apiKey });
+    const conn = new eWeLink({ at: accessToken, apiKey });
     const device = await conn.getDevice(singleChannelDeviceId);
     const currentState = device.params.switch;
     const newState = currentState === 'on' ? 'off' : 'on';
@@ -77,7 +77,7 @@ describe('env: serverless', () => {
 
   test('toggle device power state', async () => {
     jest.setTimeout(30000);
-    const conn = new ewelink({ at: accessToken, apiKey });
+    const conn = new eWeLink({ at: accessToken, apiKey });
     const device = await conn.getDevice(singleChannelDeviceId);
     const currentState = device.params.switch;
     const newState = currentState === 'on' ? 'off' : 'on';
@@ -92,7 +92,7 @@ describe('env: serverless', () => {
   });
 
   test('get channel count 1', async () => {
-    const conn = new ewelink({ at: accessToken });
+    const conn = new eWeLink({ at: accessToken });
     const result = await conn.getDeviceChannelCount(singleChannelDeviceId);
     expect(typeof result).toBe('object');
     expect(result.status).toBe('ok');
@@ -100,7 +100,7 @@ describe('env: serverless', () => {
   });
 
   test('get channel count 4', async () => {
-    const conn = new ewelink({ at: accessToken });
+    const conn = new eWeLink({ at: accessToken });
     const result = await conn.getDeviceChannelCount(fourChannelsDevice);
     expect(typeof result).toBe('object');
     expect(result.status).toBe('ok');
