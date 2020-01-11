@@ -46,9 +46,9 @@ class WebSocket {
   static customThrowError(e) {
     const loginError = e.message.indexOf('WebSocket is not opened');
     if (loginError > -1) {
-      throw { error: 401, msg: 'Authentication error' };
+      return { error: 401, msg: 'Authentication error' };
     }
-    throw { error: 'An unknown error occurred' };
+    return { error: 'An unknown error occurred' };
   }
 }
 

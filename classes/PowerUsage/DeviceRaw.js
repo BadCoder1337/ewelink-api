@@ -30,7 +30,7 @@ class DeviceRaw extends WebSocket {
     const error = _get(response[1], 'error', false);
 
     if (error === 403) {
-      throw { error, msg: response[1].reason };
+      return { error, msg: response[1].reason };
     }
 
     const hundredDaysKwhData = _get(
@@ -40,10 +40,11 @@ class DeviceRaw extends WebSocket {
     );
 
     if (!hundredDaysKwhData) {
-      throw { error: 'No power usage data found.' };
+      return { error: 'No power usage data found.' };
     }
 
     return {
+      status: 'ok',
       data: { hundredDaysKwhData },
     };
   }

@@ -30,10 +30,10 @@ class ChangeStateZeroconf extends WebSocket {
     const error = _get(response, 'error', false);
 
     if (error === 403) {
-      throw { error, msg: response.reason };
+      return { error, msg: response.reason };
     }
 
-    return { state };
+    return { status: 'ok', state };
   }
 }
 

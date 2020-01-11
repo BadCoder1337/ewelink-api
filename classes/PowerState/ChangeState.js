@@ -20,10 +20,10 @@ class ChangeState extends WebSocket {
     const error = _get(response[1], 'error', false);
 
     if (error === 403) {
-      throw { error, msg: response[1].reason };
+      return { error, msg: response[1].reason };
     }
 
-    return { state };
+    return { status: 'ok', state };
   }
 }
 

@@ -21,10 +21,10 @@ const saveDevicesCacheMixin = {
 
     try {
       fs.writeFileSync(fileName, jsonContent, 'utf8');
-      return { file: fileName };
+      return { status: 'ok', file: fileName };
     } catch (e) {
       console.log('An error occured while writing JSON Object to File.');
-      throw { error: e.toString() };
+      return { error: e.toString() };
     }
   },
 };

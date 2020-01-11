@@ -194,17 +194,24 @@ declare module 'ewelink-api' {
   }
 
   export interface IDeviceState {
-    switch?: string;
-    outlet?: number;
+    status: string
+    state: Array<{
+      switch?: string;
+      outlet?: number;
+    }>
   }
 
   export interface ISwitchCount {
     switchesAmount?: number;
+    error?: number;
+    msg?: string;
   }
 
   export interface ITemperatureHumidity {
     temperature?: number;
     humidity?: number;
+    error?: number;
+    msg?: string;
   }
 
   export interface IPowerUsage {
@@ -214,6 +221,8 @@ declare module 'ewelink-api' {
 
   export interface IFirmwareVersion {
     fwVersion?: string;
+    error?: number;
+    msg?: string;
   }
 
   export interface ILoginInfo {

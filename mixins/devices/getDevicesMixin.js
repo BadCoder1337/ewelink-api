@@ -31,11 +31,11 @@ const getDevicesMixin = {
     const devicelist = _get(response, 'devicelist', false);
 
     if (error === 406) {
-      throw { error: 401, msg: 'Authentication error' };
+      return { error: 401, msg: 'Authentication error' };
     }
 
     if (!devicelist) {
-      throw { error: 500, msg: 'No devices found' };
+      return { error: 500, msg: 'No devices found' };
     }
 
     return devicelist;

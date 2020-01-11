@@ -21,6 +21,7 @@ const getDevicePowerUsageMixin = {
     }
 
     return {
+      status: 'ok',
       ...CurrentMonth.parse({ hundredDaysKwhData }),
     };
   },

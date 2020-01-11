@@ -17,10 +17,10 @@ const getFirmwareVersionMixin = {
       if (error === 401) {
         return device;
       }
-      throw { error, msg: 'Device does not exist' };
+      return { error, msg: 'Device does not exist' };
     }
 
-    return { fwVersion };
+    return { status: 'ok', fwVersion };
   },
 };
 

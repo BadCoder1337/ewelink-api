@@ -3,7 +3,7 @@ const { _get } = require('../../lib/helpers');
 const getRegionMixin = {
   async getRegion() {
     if (!this.email || !this.password) {
-      throw {
+      return {
         error: 406,
         msg: 'Library needs to be initialized using email and password',
       };
