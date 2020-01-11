@@ -1,5 +1,6 @@
 const { makeFakeIMEI } = require('../../lib/ewelink-helper');
 const { _get } = require('../../lib/helpers');
+const { AuthError, NotFoundError } = require('../../lib/errors');
 
 const getDevicesMixin = {
   /**
@@ -31,11 +32,11 @@ const getDevicesMixin = {
     const devicelist = _get(response, 'devicelist', false);
 
     if (error === 406) {
-      throw { error: 401, msg: 'Authentication error' };
+      throw new AuthError('Authentication error', 401);
     }
 
-    if (!devicelist) {
-      throw { error: 500, msg: 'No devices found' };
+    if (!Array.isArray(devicelist)) {
+      throw new NotFoundError('No devices found', 500);
     }
 
     return devicelist;

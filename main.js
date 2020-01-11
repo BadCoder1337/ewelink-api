@@ -1,6 +1,7 @@
 const rp = require('request-promise');
 
 const { _get } = require('./lib/helpers');
+const { AuthError } = require('./lib/errors');
 
 class eWeLink {
   constructor({
@@ -96,7 +97,7 @@ class eWeLink {
 
     const error = _get(response, 'error', false);
     if (error && [401, 402].indexOf(parseInt(error)) !== -1) {
-      throw { error, msg: 'Authentication error' };
+      throw new AuthError('Authentication error', error);
     }
 
     return response;

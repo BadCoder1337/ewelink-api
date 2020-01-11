@@ -1,6 +1,5 @@
 const fs = require('fs');
-
-const { _get } = require('../../lib/helpers');
+const { FileError } = require('../../lib/errors');
 
 const saveDevicesCacheMixin = {
   /**
@@ -10,21 +9,15 @@ const saveDevicesCacheMixin = {
   async saveDevicesCache(fileName = './devices-cache.json') {
     const devices = await this.getDevices();
 
-    const error = _get(devices, 'error', false);
-
-    if (error || !devices) {
-      console.log(devices);
-      return devices;
-    }
-
     const jsonContent = JSON.stringify(devices, null, 2);
 
     try {
       fs.writeFileSync(fileName, jsonContent, 'utf8');
       return { file: fileName };
     } catch (e) {
-      console.log('An error occured while writing JSON Object to File.');
-      throw { error: e.toString() };
+      throw new FileError(
+        `An error occured while writing JSON Object to File.: [${e.name}] {${e.message}}`
+      );
     }
   },
 };

@@ -12,16 +12,8 @@ const getDeviceChannelCountMixin = {
    */
   async getDeviceChannelCount(deviceId) {
     const device = await this.getDevice(deviceId);
-    const error = _get(device, 'error', false);
     const uiid = _get(device, 'extra.extra.uiid', false);
     const switchesAmount = getDeviceChannelCount(uiid);
-
-    if (error) {
-      if (error === 401) {
-        return device;
-      }
-      throw { error, msg: 'Device does not exist' };
-    }
 
     return { switchesAmount };
   },

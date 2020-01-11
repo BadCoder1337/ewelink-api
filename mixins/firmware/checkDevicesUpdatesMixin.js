@@ -1,22 +1,15 @@
 const { _get } = require('../../lib/helpers');
 const payloads = require('../../lib/payloads');
+const { ServerError } = require('../../lib/errors');
 
 const checkDevicesUpdatesMixin = {
   async checkDevicesUpdates() {
     const devices = await this.getDevices();
 
-    const error = _get(devices, 'error', false);
-
-    if (error) {
-      return devices;
-    }
-
     const deviceInfoList = payloads.firmwareUpdate(devices);
 
-    const deviceInfoListError = _get(deviceInfoList, 'error', false);
-
-    if (deviceInfoListError) {
-      return deviceInfoList;
+    if (!deviceInfoList.length) {
+      return [];
     }
 
     const updates = await this.makeRequest({
@@ -28,8 +21,8 @@ const checkDevicesUpdatesMixin = {
 
     const upgradeInfoList = _get(updates, 'upgradeInfoList', false);
 
-    if (!upgradeInfoList) {
-      throw { error: "Can't find firmware update information" };
+    if (!Array.isArray(upgradeInfoList)) {
+      throw new ServerError("Can't find firmware update information");
     }
 
     return upgradeInfoList.map(device => {

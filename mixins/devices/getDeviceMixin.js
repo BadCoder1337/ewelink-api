@@ -1,4 +1,4 @@
-const { _get } = require('../../lib/helpers');
+const { NotFoundError } = require('../../lib/errors');
 
 const getDeviceMixin = {
   /**
@@ -15,20 +15,10 @@ const getDeviceMixin = {
 
     const devices = await this.getDevices();
 
-    const error = _get(devices, 'error', false);
-
-    if (error === 406) {
-      throw { error: 401, msg: 'Authentication error' };
-    }
-
-    if (error || !devices) {
-      return devices;
-    }
-
     const device = devices.find(dev => dev.deviceid === deviceId);
 
     if (!device) {
-      throw { error: 500, msg: 'Device does not exist' };
+      throw new NotFoundError('Device does not exist', 404);
     }
 
     return device;

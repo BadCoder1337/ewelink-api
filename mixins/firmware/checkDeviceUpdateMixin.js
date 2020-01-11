@@ -12,18 +12,10 @@ const checkDeviceUpdateMixin = {
   async checkDeviceUpdate(deviceId) {
     const device = await this.getDevice(deviceId);
 
-    const error = _get(device, 'error', false);
-
-    if (error) {
-      return device;
-    }
-
     const deviceInfoList = payloads.firmwareUpdate([device]);
 
-    const deviceInfoListError = _get(deviceInfoList, 'error', false);
-
-    if (deviceInfoListError) {
-      return deviceInfoList;
+    if (!deviceInfoList.length) {
+      return { msg: 'No update available' };
     }
 
     const update = await this.makeRequest({
